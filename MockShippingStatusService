@@ -1,0 +1,29 @@
+/* 
+@Description: Returing the status of shippment based on the tracking Number
+@Author: Sachin Setty 
+@Created Date: 03/27/24
+@Last Modified by: 
+*/
+@RestResource(urlMapping='/mockShipmentStatus')
+global class MockShippingStatusService {
+    // The shared logic in a private method
+    private static String getShippingStatus(String trackingNumber) {
+        if (trackingNumber == null) {
+            return 'Error - Must provide tracking number';
+        }
+        return 'Shipped- On Time';
+    }
+
+    // The @HttpGet method for external REST calls
+    @HttpGet
+    global static String doGet() {
+        String trackingNumber = RestContext.request.params.get('trackingNumber');
+        return getShippingStatus(trackingNumber);
+    }
+
+    // The @AuraEnabled method for internal Lightning calls
+    @AuraEnabled(cacheable=true)
+    public static String getShippingStatusLwc(String trackingNumber) {
+        return getShippingStatus(trackingNumber);
+    }
+}
